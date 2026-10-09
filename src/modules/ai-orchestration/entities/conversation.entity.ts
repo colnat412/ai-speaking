@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 import { BaseModel } from '../../../base/base.entity';
+import { PracticeSessionEntity } from '../practice/entities/practice-session.entity';
 
 @Entity('conversations')
 export class ConversationEntity extends BaseModel {
@@ -29,4 +30,18 @@ export class ConversationEntity extends BaseModel {
 
   @Column({ name: 'grammar_correction', type: 'text', nullable: true })
   grammarCorrection: string;
+
+  @Column({
+    name: 'session_id',
+    type: 'bigint',
+    nullable: true,
+  })
+  sessionId: string | null;
+
+  @ManyToOne(() => PracticeSessionEntity, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'session_id' })
+  session?: PracticeSessionEntity;
 }

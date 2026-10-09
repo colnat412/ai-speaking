@@ -34,4 +34,34 @@ export class HashidsService {
 
     return null;
   }
+
+  encodeDatabaseId(id: string): string {
+    if (!/^[1-9]\d*$/.test(id)) {
+      throw new Error('Database ID must be a positive integer');
+    }
+
+    return this.hashids.encode(BigInt(id));
+  }
+
+  decodeDatabaseId(hashId: string): string | null {
+    if (!hashId) return null;
+
+    const values = this.hashids.decode(hashId);
+
+    if (values.length !== 1) return null;
+
+    const id = String(values[0]);
+
+    if (!/^[1-9]\d*$/.test(id)) return null;
+
+    if (BigInt(id) > BigInt('9223372036854775807')) {
+      return null;
+    }
+
+    if (this.encodeDatabaseId(id) !== hashId) {
+      return null;
+    }
+
+    return id;
+  }
 }
