@@ -2,13 +2,17 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
-import { Content, GoogleGenAI } from '@google/genai';
+import { ApiError, Content, GoogleGenAI } from '@google/genai';
 import { GenerateDialogueInput, LlmAnalysisResult } from './types/index';
 
 @Injectable()
 export class LlmService {
+  private readonly logger = new Logger(LlmService.name);
   private ai: GoogleGenAI;
+  private readonly model =
+    process.env.GEMINI_MODEL?.trim() || 'gemini-3.8-flash';
 
   constructor() {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -33,7 +37,7 @@ export class LlmService {
 
     try {
       const result = await this.ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: this.model,
         contents,
         config: {
           systemInstruction: `

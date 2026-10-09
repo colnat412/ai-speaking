@@ -33,6 +33,7 @@ const ALLOWED_AUDIO_TYPES = new Set([
   'audio/mpeg',
   'audio/wav',
   'audio/x-wav',
+  'audio/wave',
 ]);
 
 @OptionalAuth()
